@@ -105,7 +105,9 @@ export default {
         .filter((view) => {
           const component = getDefaultRouteComponent(view)
           // 如果组件定义包含 noCache 或 nocache 声明，则该组件不作缓存处理
-          return component ? !(component['noCache'] || component['nocache']) : false
+          return component
+            ? !(component['noCache'] || component['nocache'])
+            : false
         })
         .map((view) => view.aliveName)
 
@@ -118,9 +120,9 @@ export default {
       // 所以如果用户自己配置了 alive 的 include 规则，则需要自己保证配置了相应的不重名组件名称
       if (userInclude instanceof RegExp) {
         // 使用正则规则
-        const source = `(?:${userInclude.source})|(?:^(?:${aliveNames
-          .map((name) => escapeRegExp(name))
-          .join('|')})$)`
+        const source = `(?:${
+          userInclude.source
+        })|(?:^(?:${aliveNames.map((name) => escapeRegExp(name)).join('|')})$)`
 
         include = new RegExp(source, userInclude.flags)
       } else {
@@ -169,7 +171,9 @@ export default {
       const viewPath = getRouterViewPath(this, root)
       // 使用重定向跳板来刷新当前路由视图组件
       this.$nextTick(() =>
-        $router.replace(`${viewPath && viewPath !== '/' ? '302' : '/301'}${fullPath}`)
+        $router.replace(
+          `${viewPath && viewPath !== '/' ? '302' : '/301'}${fullPath}`
+        )
       )
     },
 
@@ -219,7 +223,11 @@ export default {
       } else {
         // 更新已有的路由记录，比如动态路由参数可能发生了变更等
         // 一般情况下不同动态路由参数，会使用相同的路由组件实例进行渲染
-        cachedViews.splice(index, 1, Object.freeze({ ...route, ...to, path, aliveName }))
+        cachedViews.splice(
+          index,
+          1,
+          Object.freeze({ ...route, ...to, path, aliveName })
+        )
       }
     },
 

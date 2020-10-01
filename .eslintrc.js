@@ -1,16 +1,14 @@
-const isProduction = process.env.NODE_ENV === 'production'
-
 module.exports = {
-  root: false,
+  root: true,
   env: {
     node: true,
   },
-  extends: ['plugin:vue/essential', '@vue/prettier'],
-  rules: {
-    'no-console': isProduction ? 1 : 0,
-    'no-debugger': isProduction ? 2 : 0,
-  },
+  extends: ['plugin:vue/essential', 'eslint:recommended', '@vue/prettier'],
   parserOptions: {
     parser: 'babel-eslint',
+  },
+  rules: {
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
   },
 }

@@ -156,7 +156,9 @@ export default {
       const { viewClass, $route, activeComponent } = this
       return mergeClass(
         'ice-tabs-view-content-wrapper',
-        typeof viewClass === 'function' ? viewClass($route, activeComponent) : viewClass
+        typeof viewClass === 'function'
+          ? viewClass($route, activeComponent)
+          : viewClass
       )
     },
 
@@ -249,7 +251,9 @@ export default {
       }
 
       // 当前已经激活的视图
-      const activeView = viewRoutes.find((route) => isSameRoute(route, activeName))
+      const activeView = viewRoutes.find((route) =>
+        isSameRoute(route, activeName)
+      )
       const removedView = viewRoutes[cursor]
 
       // 清除已经删除的视图
@@ -274,7 +278,8 @@ export default {
       }
 
       // 找到临近的下一个路由
-      const nextView = viewRoutes[Math.min(Math.max(cursor, 0), viewRoutes.length - 1)]
+      const nextView =
+        viewRoutes[Math.min(Math.max(cursor, 0), viewRoutes.length - 1)]
 
       // 如果临近的下一个路由就是当前激活的路由，则不做处理
       if (activeView === nextView) {
@@ -310,14 +315,17 @@ export default {
     getTabNameByRoute(route) {
       const { viewRoutes } = this
       const caseSensitive = isRouteCaseSensitive()
-      const path = route !== null && typeof route === 'object' ? route.path : route
+      const path =
+        route !== null && typeof route === 'object' ? route.path : route
       for (const view of viewRoutes) {
         const name = view.path
         if (name === path) {
           return name
         }
         const reg = new RegExp(
-          `^${escapeRegExp(trimPathTrailingSlash(name))}(?:/[^/]+?)*(?:/(?=$))?$`,
+          `^${escapeRegExp(
+            trimPathTrailingSlash(name)
+          )}(?:/[^/]+?)*(?:/(?=$))?$`,
           caseSensitive ? '' : 'i'
         )
         if (reg.test(path)) {

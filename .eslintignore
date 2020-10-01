@@ -1,5 +1,5 @@
-node_modules/
-lib/**/*.min.js
+/dist
+*.min.js
 *.md
 *.woff
 *.ttf

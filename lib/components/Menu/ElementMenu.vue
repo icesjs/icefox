@@ -1,6 +1,10 @@
 <script>
 import { Menu, MenuItem, MenuItemGroup, Submenu } from 'element-ui'
-import { getVNodeChildren, mergeClass, toCamelCaseProps } from '../../utils/vnode'
+import {
+  getVNodeChildren,
+  mergeClass,
+  toCamelCaseProps,
+} from '../../utils/vnode'
 import SvgIcon from '../SvgIcon'
 
 export default {
@@ -160,7 +164,11 @@ export default {
 
         let groupTitle = this.getPropValue('groupTitle', item, items)
 
-        if (groupTitle === '' || groupTitle === null || !this.isValidVNode(groupTitle)) {
+        if (
+          groupTitle === '' ||
+          groupTitle === null ||
+          !this.isValidVNode(groupTitle)
+        ) {
           groupTitle = ''
 
           title = this.getPropValue('title', item, items)
@@ -172,7 +180,9 @@ export default {
 
         let children = this.getPropValue('children', item, items)
         if (Array.isArray(children)) {
-          children = children.filter((item) => item !== null && typeof item === 'object')
+          children = children.filter(
+            (item) => item !== null && typeof item === 'object'
+          )
         } else {
           children = []
         }
@@ -274,7 +284,10 @@ export default {
       const icon = []
 
       let iconName = this.getPropValue('icon', item, items)
-      if (Array.isArray(iconName) && !iconName.some((name) => typeof name !== 'string')) {
+      if (
+        Array.isArray(iconName) &&
+        !iconName.some((name) => typeof name !== 'string')
+      ) {
         iconName = iconName.join(' ')
       }
 
@@ -307,7 +320,11 @@ export default {
         isTitle
           ? [
               ...this.createIcon(item, items),
-              $createElement('span', { class: 'ice-menu-item-title' }, children),
+              $createElement(
+                'span',
+                { class: 'ice-menu-item-title' },
+                children
+              ),
             ]
           : children
       )
@@ -385,7 +402,12 @@ export default {
     isValidVNode(node) {
       const type = typeof node
 
-      if (node === null || type === 'string' || type === 'number' || type === 'object') {
+      if (
+        node === null ||
+        type === 'string' ||
+        type === 'number' ||
+        type === 'object'
+      ) {
         return true
       }
 

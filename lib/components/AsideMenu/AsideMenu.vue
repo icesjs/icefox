@@ -146,7 +146,9 @@ export default {
 
   methods: {
     setActiveIndex(index) {
-      this.currentActive = ['string', 'number'].includes(typeof index) ? `${index}` : ''
+      this.currentActive = ['string', 'number'].includes(typeof index)
+        ? `${index}`
+        : ''
     },
 
     refreshActiveIndex() {
@@ -195,7 +197,9 @@ export default {
         const caseSensitive = isRouteCaseSensitive()
         activeIndex = this.getMatchedRouteIndex(menuRoutes, (routePath) => {
           const reg = new RegExp(
-            `^${escapeRegExp(trimPathTrailingSlash(routePath))}(?:/[^/]+?)+(?:/(?=$))?$`,
+            `^${escapeRegExp(
+              trimPathTrailingSlash(routePath)
+            )}(?:/[^/]+?)+(?:/(?=$))?$`,
             caseSensitive ? '' : 'i'
           )
           return reg.test(path)

@@ -5,7 +5,11 @@
       leave-active-class="animated slideOutUp"
     >
       <div v-show="!hidden" class="header-wrapper">
-        <div class="header-layout-helper" v-show="showHelper" :style="helperStyle"></div>
+        <div
+          class="header-layout-helper"
+          v-show="showHelper"
+          :style="helperStyle"
+        ></div>
         <div class="header-content">
           <slot />
         </div>
@@ -131,7 +135,10 @@ export default {
 
     updateHelperStyle(style) {
       if (this.showHelper) {
-        const { resizing, left, width, ...helperStyle } = Object.assign({}, style)
+        const { resizing, left, width, ...helperStyle } = Object.assign(
+          {},
+          style
+        )
         this.resizing = !!resizing
         let marginLeft = left
         if (typeof width === 'string' && width.endsWith('px')) {

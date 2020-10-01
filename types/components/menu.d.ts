@@ -51,7 +51,11 @@ type IconRender = TitleRender
 /**
  * 属性渲染函数
  */
-type PropHandler = (item: MenuItem, siblings: MenuItem[], menuItems: MenuItem[]) => any
+type PropHandler = (
+  item: MenuItem,
+  siblings: MenuItem[],
+  menuItems: MenuItem[]
+) => any
 
 /**
  * 菜单项属性获取函数

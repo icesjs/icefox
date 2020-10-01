@@ -1,5 +1,10 @@
 <template>
-  <div ref="container" :class="className" @mouseup="onMouseUp" @mousemove="onMouseMove">
+  <div
+    ref="container"
+    :class="className"
+    @mouseup="onMouseUp"
+    @mousemove="onMouseMove"
+  >
     <split-pane
       :ref="reversed ? 'two' : 'one'"
       :style="reversed ? null : paneOneStyles"
@@ -147,7 +152,10 @@ export default {
       hasMoved: false,
       useTransition: true,
       preventResize: false,
-      sizes: [[0, 0], [0, 0]],
+      sizes: [
+        [0, 0],
+        [0, 0],
+      ],
       currentSize: initialSize,
       handler: this.doResize,
     }

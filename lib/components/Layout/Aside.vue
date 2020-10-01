@@ -105,7 +105,8 @@ export default {
       pageScrollLeft: document.documentElement.scrollLeft,
       resizing: false,
       resizeWidth: width,
-      offsetWidth: typeof width === 'string' && width.endsWith('px') ? width : 0,
+      offsetWidth:
+        typeof width === 'string' && width.endsWith('px') ? width : 0,
       inheritWidth: false,
       justify: false,
       state: {
@@ -118,7 +119,14 @@ export default {
 
   computed: {
     className() {
-      const { useTransition, collapsible, resizing, justify, state, $slots } = this
+      const {
+        useTransition,
+        collapsible,
+        resizing,
+        justify,
+        state,
+        $slots,
+      } = this
       const { fixed, collapsed, visible } = state
       return [
         'ice-layout-aside',
@@ -288,7 +296,10 @@ export default {
             this
           )
         }
-        $parent.$emit('split-resizable-change', !state.collapsed && state.visible)
+        $parent.$emit(
+          'split-resizable-change',
+          !state.collapsed && state.visible
+        )
       },
     },
   },
@@ -361,7 +372,14 @@ export default {
     syncHeaderSize() {
       const { $basicLayout } = this
       if ($basicLayout) {
-        const { resizeWidth, rootStyle, mainStyle, justifyHeight, resizing, state } = this
+        const {
+          resizeWidth,
+          rootStyle,
+          mainStyle,
+          justifyHeight,
+          resizing,
+          state,
+        } = this
         const { fixed } = state
         const sizeStyle = { ...(fixed ? mainStyle : rootStyle), resizing }
         if (!fixed && resizing) {
@@ -397,7 +415,11 @@ export default {
     },
 
     handleResize(styles, component) {
-      if (this.resizing && styles.width !== undefined && component === this.$parent) {
+      if (
+        this.resizing &&
+        styles.width !== undefined &&
+        component === this.$parent
+      ) {
         this.inheritWidth = true
         this.resizeWidth = styles.width
       }
@@ -478,7 +500,8 @@ export default {
   transition: transform @layout-collapse-transition-duration ease-out,
     width @layout-collapse-transition-duration ease-out,
     min-width @layout-collapse-transition-duration ease-out,
-    opacity @layout-collapse-transition-duration ease-out, background-color 0.3s ease-out;
+    opacity @layout-collapse-transition-duration ease-out,
+    background-color 0.3s ease-out;
 }
 
 .aside-main {
@@ -562,7 +585,10 @@ export default {
   &.ice-justify {
     .aside-main {
       top: @layout-header-height;
-      z-index: max(min(@layout-aside-fixed-z-index, @layout-header-fixed-z-index - 1), 0);
+      z-index: max(
+        min(@layout-aside-fixed-z-index, @layout-header-fixed-z-index - 1),
+        0
+      );
     }
   }
 }

@@ -142,7 +142,10 @@ export default {
   &-vertical {
     &.splitter-line-layout {
       &:before {
-        z-index: max(@layout-aside-fixed-z-index, @layout-header-fixed-z-index + 1) + 1;
+        z-index: max(
+            @layout-aside-fixed-z-index,
+            @layout-header-fixed-z-index + 1
+          ) + 1;
       }
 
       &:after {

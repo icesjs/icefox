@@ -11,7 +11,10 @@
       </slot>
     </div>
 
-    <layout-content class="ice-breadcrumb-view-content" :scrollable="scrollable">
+    <layout-content
+      class="ice-breadcrumb-view-content"
+      :scrollable="scrollable"
+    >
       <router-view
         ref="aliveView"
         :class="viewClassName"
@@ -106,7 +109,9 @@ export default {
     viewClassName() {
       const { viewClass, $route, activeComponent } = this
       return mergeClass(
-        typeof viewClass === 'function' ? viewClass($route, activeComponent) : viewClass
+        typeof viewClass === 'function'
+          ? viewClass($route, activeComponent)
+          : viewClass
       )
     },
 
@@ -188,23 +193,28 @@ export default {
     },
 
     registerBeforeHook() {
-      this.$unregisterBeforeHooks = this.$router.beforeEach((to, from, next) => {
-        const { $preservedRoute } = this
-        if ($preservedRoute) {
-          const viewPath = this.matchViewPath(to)
-          if (viewPath) {
-            // 进入面包屑路由视图
-            this.$preservedRoute = null
-            if (isSameRoute(to, viewPath) && !isSameRoute(to, $preservedRoute)) {
-              // 进入到已历史创建的面包屑路由组件
-              next($preservedRoute)
-              return
+      this.$unregisterBeforeHooks = this.$router.beforeEach(
+        (to, from, next) => {
+          const { $preservedRoute } = this
+          if ($preservedRoute) {
+            const viewPath = this.matchViewPath(to)
+            if (viewPath) {
+              // 进入面包屑路由视图
+              this.$preservedRoute = null
+              if (
+                isSameRoute(to, viewPath) &&
+                !isSameRoute(to, $preservedRoute)
+              ) {
+                // 进入到已历史创建的面包屑路由组件
+                next($preservedRoute)
+                return
+              }
             }
           }
+          // 完成路由解析
+          next()
         }
-        // 完成路由解析
-        next()
-      })
+      )
     },
 
     registerAfterHook() {

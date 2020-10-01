@@ -1,5 +1,9 @@
 <template>
-  <element-breadcrumb class="ice-router-breadcrumb" v-bind="$attrs" v-on="$listeners">
+  <element-breadcrumb
+    class="ice-router-breadcrumb"
+    v-bind="$attrs"
+    v-on="$listeners"
+  >
     <transition-group :name="transitionName">
       <breadcrumb-item
         v-for="route in routeItems"

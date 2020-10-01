@@ -43,7 +43,9 @@ export default {
   },
 
   created() {
-    this.$on('split-size-change', (...args) => this.$emit('size-change', ...args))
+    this.$on('split-size-change', (...args) =>
+      this.$emit('size-change', ...args)
+    )
     this.$on('split-resizable-change', (...args) =>
       this.$emit('resizable-change', ...args)
     )
