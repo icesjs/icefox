@@ -1,15 +1,14 @@
 {
   "name": "icefox",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "A library for vue app",
   "main": "dist/icefox.common.js",
   "module": "dist/icefox.esm.js",
-  "browser": "dist/icefox.min.js",
   "unpkg": "dist/icefox.min.js",
   "jsdelivr": "dist/icefox.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build:all": "rimraf dist && npm run build:cjs && npm run build:esm && npm run build:umd && cpy 'examples/demo.txt' dist --rename=demo.html",
+    "build:all": "rimraf dist && npm run build:cjs && npm run build:esm && npm run build:umd && cpy 'examples/demo.txt' dist --rename='demo.html'",
     "build:cjs": "cross-env NODE_ENV=production MODULE_BUILD=true rollup -c -f cjs",
     "build:esm": "cross-env NODE_ENV=production MODULE_BUILD=true rollup -c -f es",
     "build:umd": "cross-env NODE_ENV=production rollup -c -f iife",
@@ -23,7 +22,7 @@
     "debug": "^4.1.1",
     "lodash.debounce": "^4.0.8",
     "nprogress": "^0.2.0",
-    "qs": "^6.7.0",
+    "qs": "^6.5.0",
     "resize-observer-polyfill": "^1.5.1",
     "url-parse": "^1.4.7",
     "vue-runtime-helpers": "^1.1.2"

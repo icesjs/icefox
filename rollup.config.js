@@ -257,7 +257,7 @@ if (allowFormat(/umd|iife/)) {
     output: {
       format: 'iife',
       compact: true,
-      file: pkg.browser,
+      file: pkg.unpkg,
       name: exportsName,
       exports: 'named',
       globals,
