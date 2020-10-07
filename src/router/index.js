@@ -1,10 +1,32 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import globalShim from '@/utils/global'
 import { formatSetup, toObject } from '@/utils/mixed'
+import { isESModule } from '@/utils/assert'
 import { ensureRoutes } from './utils'
 import applyHooks from './hooks'
 
-Vue.use(VueRouter)
+// 安装vue-router
+function installVueRouter() {
+  let VueRouter
+  // 这里是根据构建环境条件来进行vue-router的安装
+  if (process.env.MODULE_BUILD === 'true') {
+    // 模块化构建时，自动安装
+    VueRouter = require('vue-router')
+    if (isESModule(VueRouter)) {
+      VueRouter = VueRouter.default
+    }
+    Vue.use(VueRouter)
+  } else {
+    // 非模块化构建，取全局模块
+    VueRouter = globalShim.VueRouter
+    if (!VueRouter) {
+      throw new Error(
+        'Can not find the constructor of VueRouter, you must install vue-router first.\n(https://router.vuejs.org/installation.html)'
+      )
+    }
+  }
+  return VueRouter
+}
 
 // 默认的路由配置
 const defaultSetup = {
@@ -33,8 +55,12 @@ function addRoutes(routes) {
  * 创建路由实例。
  * @param base 基础路由配置。
  * @param global 全局路由配置。
+ * @param abortWarn 不输出警告信息
  */
-export default function createRouter(base, global) {
+export default function createRouter(base, global, abortWarn = false) {
+  // 安装
+  const VueRouter = installVueRouter()
+
   const { routes: baseRoutes, ...baseSetup } = toObject(base)
   const { routes: globalRoutes, created, ...globalSetup } = formatSetup(global)
 
@@ -42,14 +68,16 @@ export default function createRouter(base, global) {
   if (Array.isArray(globalRoutes) && globalRoutes.length) {
     // 如果在main.js里定义了路由配置，则不使用自动生成的配置
     routes = globalRoutes
-    setTimeout(
-      () =>
-        (Vue.$debug || console)['warn'](
-          'Using the routing configuration in the main.js file, ' +
-            'the automatically generated routing configuration is ignored.'
-        ),
-      0
-    )
+    if (!abortWarn) {
+      setTimeout(
+        () =>
+          (Vue.$debug || console)['warn'](
+            'Using the routing configuration in the main.js file, ' +
+              'the automatically generated routing configuration is ignored.'
+          ),
+        0
+      )
+    }
   } else {
     routes = baseRoutes
   }

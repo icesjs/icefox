@@ -40,7 +40,7 @@ function injectToStore(store, call) {
 /**
  * 获取异步调用器。
  * @param requestPlugin 用于发起请求插件。
- * @returns {call}
+ * @returns {function(*=, ...[*]): (*)}
  */
 function getAsyncCall(requestPlugin) {
   return function call(callee, ...args) {

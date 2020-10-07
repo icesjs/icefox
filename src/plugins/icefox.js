@@ -1,19 +1,28 @@
+import globalShim from '@/utils/global'
 import components from '../components'
 
-// 安装组件
+// 标记插件是否已经安装
 let installed = false
 
-function install(Vue, opts) {
+// 导出插件名称（供umd模块使用）
+export const name = 'icefox'
+
+// 导出版本号（供umd模块使用）
+export const version = process.env.ICEFOX_VERSION
+
+// 导出安装方法（供umd模块使用）
+export function install(Vue, opts) {
+  // 保存全局配置
+  // 可多次调用install修改全局配置
+  Object.defineProperty(Vue.prototype, '$ICEFOX', {
+    value: Object.freeze({ ...Object.assign({}, opts) }),
+    writable: true,
+  })
+
   if (installed) {
     return
   }
 
-  const options = Object.assign({}, opts)
-
-  // 保存全局配置
-  Object.defineProperty(Vue.prototype, '$ICEFOX', {
-    value: Object.freeze({ ...options }),
-  })
   // 安装所有组件
   components.forEach((component) => {
     if (typeof component.install === 'function') {
@@ -24,12 +33,13 @@ function install(Vue, opts) {
   installed = true
 }
 
-if (typeof window !== 'undefined' && window.Vue) {
-  install(window.Vue)
-}
+// 导出插件（供模块构建器使用）
+export default { name, version, install }
 
-// 导出插件
-export default {
-  name: 'icefox',
-  install,
+// 非模块构建（直接在浏览器端使用），默认通过全局Vue安装此插件
+if (process.env.MODULE_BUILD !== 'true') {
+  const GlobalVue = globalShim.Vue
+  if (GlobalVue) {
+    install(GlobalVue)
+  }
 }

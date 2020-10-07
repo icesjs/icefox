@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'production') {
   const runtimePluginOptions = {
     helpers: true,
     corejs: false,
-    regenerator: true,
+    regenerator: process.env.MODULE_BUILD === 'true',
     absoluteRuntime: false,
     version: require('@babel/runtime/package.json').version,
   }
@@ -25,6 +25,7 @@ if (process.env.NODE_ENV === 'production') {
     ],
   }
 } else {
+  // development
   module.exports = {
     presets: [['@vue/babel-preset-app', appPresetOptions]],
     plugins: ['@babel/plugin-proposal-export-default-from'],

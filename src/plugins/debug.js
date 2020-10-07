@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
-import debug from 'debug'
+import debug from 'debug/src/browser'
+import globalShim from '@/utils/global'
 import { debugToken } from '@/utils/mixed'
 import { getComponentDeclaredName } from '@/router/utils'
 
@@ -216,8 +217,8 @@ function handleWarnings(message, vm, trace) {
 
 function setDebugManager(name) {
   // 挂载到window上，方便切换命名空间和调试级别
-  if (typeof window[name] === 'undefined') {
-    window[name] = (namespaces, level) => {
+  if (typeof globalShim[name] === 'undefined') {
+    globalShim[name] = (namespaces, level) => {
       if (typeof level === 'string') {
         setCurrentDebugLevel(level)
       }
@@ -226,7 +227,7 @@ function setDebugManager(name) {
       }
     }
 
-    Object.defineProperties(window[name], {
+    Object.defineProperties(globalShim[name], {
       enable: {
         value: enableDebug,
       },

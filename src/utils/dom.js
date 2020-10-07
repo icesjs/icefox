@@ -2,7 +2,8 @@ import ResizeObserver from 'resize-observer-polyfill'
 import { isElement } from './assert'
 import { capitalize } from './mixed'
 
-const isBrowser = typeof document !== 'undefined'
+const isBrowser =
+  typeof window !== 'undefined' && typeof document !== 'undefined'
 
 function getEventName(type, name) {
   const cName = capitalize(name)

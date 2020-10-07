@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Demo</title>
+  <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/npm/element-ui@2/lib/theme-chalk/index.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/element-ui@2/lib/index.js"></script>
+  <script src="./icefox.min.js"></script>
+</head>
+<body>
+<div id="app">
+  <ice-basic-layout horizontal>
+    <ice-layout-aside fixed collapsible>
+      <ice-logo-panel slot="header">
+        <div slot="title">Vue</div>
+      </ice-logo-panel>
+      <ice-aside-menu :menu-items="[{id:'home',title:'Home',icon:'el-icon-star-off'}]" />
+    </ice-layout-aside>
+    <ice-layout>
+      <ice-layout-header />
+      <ice-layout-content />
+    </ice-layout>
+  </ice-basic-layout>
+</div>
+<script>
+  new Vue({
+    el: '#app',
+  })
+</script>
+</body>
+</html>

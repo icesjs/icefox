@@ -26,6 +26,7 @@ const resolveAlias = {
 // 代码中使用到的环境变量声明
 const envData = {
   NODE_ENV: 'production',
+  ICEFOX_VERSION: pkg.version,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -115,6 +116,21 @@ function transformResolveAlias(alias) {
   return entries
 }
 
+// 模块模式构建时移除regenerator-runtime运行时代码（由@babel/preset-env导入）
+// 此运行时已经由@babel/plugin-transform-runtime插件导入
+function rollupPluginRemoveRegeneratorRuntime() {
+  return {
+    load(id) {
+      if (process.env.MODULE_BUILD === 'true') {
+        if (/[/\\]regenerator-runtime[/\\]/.test(id)) {
+          return ''
+        }
+      }
+      return null
+    },
+  }
+}
+
 // 需要进行构建处理的资源扩展名
 const resolveExtensions = ['.js', '.jsx', '.ts', '.tsx', '.vue']
 
@@ -135,6 +151,7 @@ const baseConfig = {
         entries: transformResolveAlias(resolveAlias),
       }),
       json(),
+      rollupPluginRemoveRegeneratorRuntime(),
       rollupPluginVueResolve(),
       resolve(),
       url(),
@@ -145,7 +162,7 @@ const baseConfig = {
     ],
     replace: defineEnv({
       ...envData,
-      ES_BUILD: false,
+      MODULE_BUILD: false,
     }),
     vue: {
       css: true,
@@ -161,6 +178,10 @@ const baseConfig = {
       exclude: 'node_modules/**',
       extensions: resolveExtensions,
       babelHelpers: 'runtime',
+    },
+    commonjs: {
+      transformMixedEsModules: true,
+      exclude: [/[/\\]regenerator-runtime[/\\]/], // 不需要对regenerator-runtime进行处理
     },
   },
 }
@@ -182,16 +203,13 @@ if (allowFormat(/esm?/)) {
       replace({
         ...baseConfig.plugins.replace,
         ...defineEnv({
-          ES_BUILD: true,
+          MODULE_BUILD: true,
         }),
       }),
       ...baseConfig.plugins.beforeVue,
       vue(baseConfig.plugins.vue),
-      babel({
-        ...baseConfig.plugins.babel,
-        babelHelpers: 'runtime',
-      }),
-      commonjs(),
+      babel(baseConfig.plugins.babel),
+      commonjs(baseConfig.plugins.commonjs),
     ],
   })
 }
@@ -211,7 +229,12 @@ if (allowFormat('cjs')) {
       sourcemap: true,
     },
     plugins: [
-      replace(baseConfig.plugins.replace),
+      replace({
+        ...baseConfig.plugins.replace,
+        ...defineEnv({
+          MODULE_BUILD: true,
+        }),
+      }),
       ...baseConfig.plugins.beforeVue,
       vue({
         ...baseConfig.plugins.vue,
@@ -220,11 +243,8 @@ if (allowFormat('cjs')) {
           optimizeSSR: true,
         },
       }),
-      babel({
-        ...baseConfig.plugins.babel,
-        babelHelpers: 'runtime',
-      }),
-      commonjs(),
+      babel(baseConfig.plugins.babel),
+      commonjs(baseConfig.plugins.commonjs),
     ],
   })
 }
@@ -247,10 +267,8 @@ if (allowFormat(/umd|iife/)) {
       replace(baseConfig.plugins.replace),
       ...baseConfig.plugins.beforeVue,
       vue(baseConfig.plugins.vue),
-      babel({
-        ...baseConfig.plugins.babel,
-      }),
-      commonjs(),
+      babel(baseConfig.plugins.babel),
+      commonjs(baseConfig.plugins.commonjs),
       terser({
         output: {
           ecma: 5,

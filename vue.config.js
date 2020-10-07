@@ -1,4 +1,5 @@
 const projectRoot = 'examples'
+
 module.exports = {
   pluginOptions: {
     preprocess: {
@@ -9,6 +10,9 @@ module.exports = {
     },
     services: {
       notifier: false,
+      define: {
+        MODULE_BUILD: 'true',
+      },
       mock: {
         path: `${projectRoot}/mock`,
       },

@@ -2,6 +2,7 @@
  * 组件集，用于标记已声明的组件
  */
 import { hasOwnProperty } from '@/utils/mixed'
+import { isESModule } from '@/utils/assert'
 
 const COMPONENT_SET = new Set()
 
@@ -32,23 +33,6 @@ const REDIRECT_COMPONENT = {
     const { path } = params
     $router.replace({ path: `/${path}`, query })
   },
-}
-
-/**
- * 判断当前模块是否是ES模块
- * @param obj
- * @returns {boolean}
- */
-export function isESModule(obj) {
-  if (!obj || typeof obj !== 'object') {
-    return false
-  }
-  const hasSymbol =
-    typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol'
-  return !!(
-    obj.__esModule ||
-    (hasSymbol && obj[Symbol.toStringTag] === 'Module')
-  )
 }
 
 /**

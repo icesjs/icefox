@@ -1,7 +1,66 @@
-import axios from 'axios'
-import { merge } from 'axios/lib/utils'
 import qs from 'qs'
+import globalShim from '@/utils/global'
 import { debugToken, hasOwnProperty } from '@/utils/mixed'
+import { isESModule, isPlainObject } from '@/utils/assert'
+
+let axios
+let merge
+
+// 检测axios
+function detectAxios() {
+  // 根据构建环境条件检测并赋值axios
+  if (process.env.MODULE_BUILD === 'true') {
+    axios = require('axios')
+    merge = require('axios/lib/utils').merge
+    if (isESModule(axios)) {
+      axios = axios.default
+    }
+    if (isESModule(merge)) {
+      merge = merge.default
+    }
+  } else {
+    axios = globalShim.axios
+    if (!axios) {
+      throw new Error(
+        'The request plugin requires axios in this browser.\n(https://www.npmjs.com/package/axios#installing)'
+      )
+    }
+    //
+    const forEach = (obj, fn) => {
+      if (obj === null || typeof obj === 'undefined') {
+        return
+      }
+      if (typeof obj !== 'object') {
+        obj = [obj]
+      }
+      if (Array.isArray(obj)) {
+        obj.forEach(fn)
+      } else {
+        for (const [key, val] of Object.entries(obj)) {
+          fn.call(null, val, key, obj)
+        }
+      }
+    }
+    //
+    merge = (...args) => {
+      const result = {}
+      for (const arg of args) {
+        forEach(arg, (val, key) => {
+          if (isPlainObject(result[key]) && isPlainObject(val)) {
+            result[key] = merge(result[key], val)
+          } else if (isPlainObject(val)) {
+            result[key] = merge({}, val)
+          } else if (Array.isArray(val)) {
+            result[key] = val.slice()
+          } else {
+            result[key] = val
+          }
+        })
+      }
+      return result
+    }
+  }
+}
 
 // 相对url检测正则
 const relativeUrlReg = /^(?!\/{2,}|[^/:?&=#.]+(?:(?:\.[^/:?&=#.]+)+|:\d+))(?:\/|(?!https?:\/*)).*/i
@@ -303,7 +362,7 @@ function accessorize(request) {
  *  $http.all(['GET xxx/xxx', {url: 'xxx/xxx'}, function(){}, promise, any])
  *
  * @param request 已装饰的请求实例对象。
- * @returns {all}
+ * @returns {function(*=): (*)}
  */
 function concurrent(request) {
   return function all(iterable) {
@@ -669,6 +728,9 @@ const plugin = {
   name: 'request',
   // 插件安装方法
   install(Vue, defaults, plugins) {
+    // 检测axios安装情况
+    detectAxios()
+
     // 保存内建app插件列表
     if (Array.isArray(plugins)) {
       buildInPlugins = plugins

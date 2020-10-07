@@ -1,12 +1,14 @@
 export * as filters from './filters'
 export * as directives from './directives'
 export * as mixins from './mixins'
-export * as asserts from './utils/assert'
+export * as plugins from './plugins'
+
 export * from './components'
 
-export * as createApp from './app/full'
-export * from './app/only'
-export * from './app/withRouter'
-export * from './app/withStore'
+export * from './app'
 
-export default from './plugins/icefox'
+// umd
+export * from './plugins/icefox'
+
+// cjs、esm
+export { default } from './plugins/icefox'
